@@ -2,6 +2,13 @@ import './style.css';
 import { dayOfWeek, monthMatrix, parseIso, toIso } from './lib/date';
 import { coverage, holidayName } from './lib/holiday';
 import { bridgesInYear, labelStreak, streaksInYear, yearStats, type Streak } from './lib/streak';
+import { nextPref, prefLabel, readPref, savePref, type ThemePref } from './lib/theme';
+
+const THEME_ICONS: Record<ThemePref, string> = {
+  system: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="8.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M12 3.5a8.5 8.5 0 0 1 0 17Z" fill="currentColor"/></svg>`,
+  light: `<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.1" fill="none" stroke="currentColor" stroke-width="1.7"/><g stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M12 2.6v2.4M12 19v2.4M2.6 12h2.4M19 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7"/></g></svg>`,
+  dark: `<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 14.8A8.4 8.4 0 0 1 9.2 3.5 7.6 7.6 0 1 0 20.5 14.8Z" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/></svg>`,
+};
 
 const WEEKDAYS = ['日', '月', '火', '水', '木', '金', '土'];
 const range = coverage();
@@ -167,6 +174,22 @@ document.addEventListener('keydown', (e) => {
     return;
   if (e.key === 'ArrowLeft') setYear(year - 1);
   if (e.key === 'ArrowRight') setYear(year + 1);
+});
+
+// テーマ切替(system → light → dark を巡回)。data-theme属性で見た目が決まる。
+const themeBtn = document.getElementById('theme-toggle') as HTMLButtonElement;
+let themePref = readPref(localStorage);
+function applyThemePref(pref: ThemePref): void {
+  document.documentElement.dataset.theme = pref;
+  themeBtn.innerHTML = THEME_ICONS[pref];
+  themeBtn.setAttribute('aria-label', `テーマ: ${prefLabel(pref)}(切り替え)`);
+  themeBtn.title = `テーマ: ${prefLabel(pref)}`;
+}
+applyThemePref(themePref);
+themeBtn.addEventListener('click', () => {
+  themePref = nextPref(themePref);
+  savePref(localStorage, themePref);
+  applyThemePref(themePref);
 });
 
 render();
