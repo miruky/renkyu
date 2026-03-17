@@ -1,30 +1,57 @@
 :root {
-  --bg: #f6f5f2;
-  --panel: #ffffff;
-  --ink: #2b2823;
+  color-scheme: light;
+  --bg: #f4f2ec;
+  --panel: #fbfaf6;
+  --panel-2: #efece3;
+  --ink: #292621;
   --muted: #6e675d;
-  --line: #e5e1d8;
-  --accent: #b3543c;
-  --accent-soft: #f5e3dd;
-  --sun: #b3543c;
+  --faint: #9b9384;
+  --line: #e3dfd4;
+  --line-strong: #d4cfc1;
+  --accent: #ad4f37;
+  --accent-soft: color-mix(in srgb, var(--accent) 10%, transparent);
+  --sun: #ad4f37;
   --sat: #3c6cb3;
-  --streak-bg: #f0ece2;
-  --shadow: 0 8px 24px rgb(43 40 35 / 0.07);
+  --streak-bg: color-mix(in srgb, var(--accent) 7%, transparent);
+  --pop: 0 1px 2px rgb(43 40 35 / 0.05), 0 14px 34px -18px rgb(43 40 35 / 0.22);
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --bg: #1a1815;
+  --panel: #221f1b;
+  --panel-2: #1e1b17;
+  --ink: #e9e5dd;
+  --muted: #a39a8c;
+  --faint: #756d60;
+  --line: #332f29;
+  --line-strong: #423d35;
+  --accent: #e08a6d;
+  --accent-soft: color-mix(in srgb, var(--accent) 18%, transparent);
+  --sun: #e08a6d;
+  --sat: #84a9e0;
+  --streak-bg: color-mix(in srgb, var(--accent) 14%, transparent);
+  --pop: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -18px rgb(0 0 0 / 0.66);
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --bg: #1b1916;
-    --panel: #25221e;
-    --ink: #e8e4dc;
+  :root[data-theme='system'],
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --bg: #1a1815;
+    --panel: #221f1b;
+    --panel-2: #1e1b17;
+    --ink: #e9e5dd;
     --muted: #a39a8c;
-    --line: #3a352e;
+    --faint: #756d60;
+    --line: #332f29;
+    --line-strong: #423d35;
     --accent: #e08a6d;
-    --accent-soft: #463029;
+    --accent-soft: color-mix(in srgb, var(--accent) 18%, transparent);
     --sun: #e08a6d;
     --sat: #84a9e0;
-    --streak-bg: #2e2a24;
-    --shadow: 0 8px 24px rgb(0 0 0 / 0.35);
+    --streak-bg: color-mix(in srgb, var(--accent) 14%, transparent);
+    --pop: 0 1px 2px rgb(0 0 0 / 0.5), 0 16px 40px -18px rgb(0 0 0 / 0.66);
   }
 }
 
@@ -39,6 +66,14 @@ body {
   background: var(--bg);
   color: var(--ink);
   line-height: 1.6;
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 /* ヘッダー */
@@ -72,14 +107,47 @@ body {
   color: var(--muted);
 }
 
-.repo-link {
+.header-actions {
   margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.icon-btn {
+  display: inline-grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--muted);
+  cursor: pointer;
+  transition:
+    color 0.2s,
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.icon-btn svg {
+  width: 19px;
+  height: 19px;
+}
+
+.icon-btn:hover,
+.icon-btn:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.repo-link {
   font-size: 14px;
   color: var(--muted);
   text-decoration: none;
   border: 1px solid var(--line);
   border-radius: 999px;
-  padding: 6px 16px;
+  padding: 7px 16px;
   transition:
     color 0.2s,
     border-color 0.2s;
@@ -159,11 +227,11 @@ body {
 
 .stat {
   background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 12px 24px;
+  padding: 14px 26px;
   text-align: center;
-  min-width: 128px;
+  min-width: 132px;
 }
 
 .stat .num {
@@ -179,8 +247,12 @@ body {
 
 .stat .cap {
   display: block;
-  font-size: 12px;
-  color: var(--muted);
+  margin-top: 2px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--faint);
 }
 
 /* レイアウト */
@@ -211,9 +283,16 @@ body {
 
 .month {
   background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 12px 14px 14px;
+  padding: 14px 16px 16px;
+  transition:
+    border-color 0.2s ease,
+    background-color 0.2s ease;
+}
+
+.month:hover {
+  border-color: var(--line-strong);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -300,16 +379,20 @@ body {
 
 .panel {
   background: var(--panel);
+  border: 1px solid var(--line);
   border-radius: 12px;
-  box-shadow: var(--shadow);
-  padding: 16px 18px;
+  padding: 18px 20px;
 }
 
 .panel h3 {
-  font-size: 13px;
-  color: var(--muted);
-  margin-bottom: 8px;
-  letter-spacing: 0.04em;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--faint);
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--line);
 }
 
 .panel ol {
