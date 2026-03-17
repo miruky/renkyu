@@ -1,6 +1,7 @@
 import './style.css';
 import { dayOfWeek, monthMatrix, parseIso, toIso } from './lib/date';
-import { coverage, holidayName } from './lib/holiday';
+import { coverage, holidayName, holidaysIn } from './lib/holiday';
+import { holidaysToIcs } from './lib/ics';
 import { bridgesInYear, labelStreak, streaksInYear, yearStats, type Streak } from './lib/streak';
 import { nextPref, prefLabel, readPref, savePref, type ThemePref } from './lib/theme';
 
@@ -169,6 +170,16 @@ document.getElementById('next-year')?.addEventListener('click', () => setYear(ye
 document
   .getElementById('this-year')
   ?.addEventListener('click', () => setYear(parseIso(today).year));
+
+document.getElementById('export-ics')?.addEventListener('click', () => {
+  const ics = holidaysToIcs(holidaysIn(year), { year });
+  const url = URL.createObjectURL(new Blob([ics], { type: 'text/calendar;charset=utf-8' }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `renkyu-${year}.ics`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
 document.addEventListener('keydown', (e) => {
   if (e.target instanceof HTMLElement && /^(input|select|textarea)$/i.test(e.target.tagName))
     return;
