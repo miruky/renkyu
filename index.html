@@ -7,6 +7,18 @@
     <meta name="description" content="祝日と連休が一目でわかる年間カレンダー" />
     <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
     <title>renkyu - 祝日・連休カレンダー</title>
+    <script>
+      // 描画前にテーマを確定させ、リロード時のちらつきを防ぐ。
+      (function () {
+        try {
+          var t = localStorage.getItem('renkyu-theme');
+          document.documentElement.dataset.theme =
+            t === 'light' || t === 'dark' || t === 'system' ? t : 'system';
+        } catch (e) {
+          document.documentElement.dataset.theme = 'system';
+        }
+      })();
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -28,7 +40,10 @@
         <h1>renkyu</h1>
         <p class="tagline">祝日と連休が一目でわかる年間カレンダー</p>
       </div>
-      <a class="repo-link" href="https://github.com/miruky/renkyu" rel="noreferrer">GitHub</a>
+      <div class="header-actions">
+        <button type="button" id="theme-toggle" class="icon-btn"></button>
+        <a class="repo-link" href="https://github.com/miruky/renkyu" rel="noreferrer">GitHub</a>
+      </div>
     </header>
 
     <nav class="year-nav" aria-label="年の切り替え">
