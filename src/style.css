@@ -366,6 +366,15 @@ body {
   border-radius: 6px;
 }
 
+.month td:not(:empty) {
+  cursor: default;
+  transition: background-color 0.15s ease;
+}
+
+.month td.holiday:hover {
+  background: color-mix(in srgb, var(--accent) 18%, transparent);
+}
+
 /* サイドパネル */
 
 .rail {
@@ -403,8 +412,15 @@ body {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 8px 0;
+  padding: 10px 8px;
+  margin: 0 -8px;
   border-top: 1px solid var(--line);
+  border-radius: 8px;
+  transition: background-color 0.15s ease;
+}
+
+.panel li:not(.empty):hover {
+  background: var(--accent-soft);
 }
 
 @media (prefers-reduced-motion: no-preference) {
